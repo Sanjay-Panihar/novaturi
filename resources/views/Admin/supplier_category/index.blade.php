@@ -37,7 +37,6 @@
                             <th>Featured Category</th>
                             <th>Category Images</th>
                             <th>Cover Image</th>
-                            <th>Discount</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -47,7 +46,7 @@
                             <tr>
                                 <td>{{ $category->id }}</td>
                                 <td>{{ $category->category_name }}</td>
-                                <td>{{ $category->featured_category }}</td>
+                                <td>{{ $category->featured_category==1 ? "Yes" : "No" }}</td>
                                 <td>
                                     @if(!empty($category->category_image))
                                         @foreach(json_decode($category->category_image) as $image)
@@ -62,7 +61,6 @@
                                             height="50px">
                                     @endif
                                 </td>
-                                <td>{{ $category->category_discount }}</td>
                                 <td>
                                     @if($category->category_status == 1)
                                         <span class="badge bg-success">Active</span>

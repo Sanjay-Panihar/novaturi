@@ -28,16 +28,6 @@ class FreelanceCategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $this->addUpdateFreelanceCategory($request);
-
-        return redirect()->route('freelance-category.index')->with('Success_message', 'Freelance category has been created successfully.');
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
@@ -46,21 +36,6 @@ class FreelanceCategoryController extends Controller
 
         return view('Admin.freelance_category.edit', compact('freelanceCategory'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        $freelanceCategory = FreelanceCategory::findOrFail($id);
-        $this->addUpdateFreelanceCategory($request, $freelanceCategory);
-
-        return redirect()->route('freelance-category.index')->with('Success_message', 'Freelance category updated successfully.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(FreelanceCategory $freelanceCategory)
     {
         // Delete associated category images
@@ -91,6 +66,20 @@ class FreelanceCategoryController extends Controller
     /**
      * Shared function to handle both store and update operations for Freelance Category.
      */
+    public function store(Request $request)
+    {
+        $this->addUpdateFreelanceCategory($request);
+
+        return redirect()->route('freelance-category.index')->with('Success_message', 'Freelance category has been created successfully.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $freelanceCategory = FreelanceCategory::findOrFail($id);
+        $this->addUpdateFreelanceCategory($request, $freelanceCategory);
+
+        return redirect()->route('freelance-category.index')->with('Success_message', 'Freelance category updated successfully.');
+    }
     private function addUpdateFreelanceCategory(Request $request, FreelanceCategory $freelanceCategory = null)
     {
         $validatedData = $request->validate([
@@ -107,7 +96,7 @@ class FreelanceCategoryController extends Controller
             'meta_keywords'     => 'nullable|string|max:255',
             'category_status'   => 'required|in:0,1',
         ]);
-
+    
         // Handle category image upload if files are present
         if ($request->hasFile('category_image')) {
             $images = [];
@@ -118,7 +107,7 @@ class FreelanceCategoryController extends Controller
             }
             $validatedData['category_image'] = json_encode($images);
         }
-
+    
         // Handle cover image upload if files are present
         if ($request->hasFile('cover_image')) {
             $coverImage = $request->file('cover_image');
@@ -126,28 +115,31 @@ class FreelanceCategoryController extends Controller
             $coverImage->move(public_path('admin/freelance/cover_image/smallimage'), $coverImageName);
             $validatedData['cover_image'] = $coverImageName;
         }
-
+    
         // If updating, delete old images if new ones are provided
         if ($freelanceCategory) {
             if (!empty($freelanceCategory->category_image) && $request->hasFile('category_image')) {
                 $oldImages = json_decode($freelanceCategory->category_image);
                 foreach ($oldImages as $oldImage) {
-                    if (file_exists(public_path('admin/freelance/category_image/smallimage/' . $oldImage))) {
-                        unlink(public_path('admin/freelance/category_image/smallimage/' . $oldImage));
+                    $imagePath = public_path('admin/freelance/category_image/smallimage/' . $oldImage);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
                     }
                 }
             }
             // Handle old cover image
             if (!empty($freelanceCategory->cover_image) && $request->hasFile('cover_image')) {
-                if (file_exists(public_path('admin/freelance/cover_image/smallimage/' . $freelanceCategory->cover_image))) {
-                    unlink(public_path('admin/freelance/cover_image/smallimage/' . $freelanceCategory->cover_image));
+                $coverImagePath = public_path('admin/freelance/cover_image/smallimage/' . $freelanceCategory->cover_image);
+                if (file_exists($coverImagePath)) {
+                    unlink($coverImagePath);
                 }
             }
             $freelanceCategory->update($validatedData);
         } else {
             $freelanceCategory = FreelanceCategory::create($validatedData);
         }
-
+    
         return $freelanceCategory;
     }
+    
 }

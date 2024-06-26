@@ -28,21 +28,21 @@
                     </div>
                     <div class="form-group">
                         <label for="featured_category">Featured Category</label>
-                        <input type="text" class="form-control" id="featured_category" name="featured_category" placeholder="Enter featured category">
+                        <select class="form-control" id="featured_category" name="featured_category">
+                            <option value="">Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="category_image">Category Image</label>
-                        <input type="file" class="form-control" id="category_image" name="category_image" accept="image/*">
+                        <input type="file" class="form-control" id="category_image" name="category_image[]" multiple accept="image/*">
                         <p class="help-block">Upload category image (jpg, jpeg, png, gif).</p>
                     </div>
                     <div class="form-group">
                         <label for="cover_image">Cover Image</label>
                         <input type="file" class="form-control" id="cover_image" name="cover_image" accept="image/*">
                         <p class="help-block">Upload cover image (jpg, jpeg, png, gif).</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="category_discount">Category Discount</label>
-                        <input type="number" step="0.01" class="form-control" id="category_discount" name="category_discount" placeholder="Enter category discount">
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>

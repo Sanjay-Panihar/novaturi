@@ -29,7 +29,11 @@
                     </div>
                     <div class="form-group">
                         <label for="featured_category">Featured Category</label>
-                        <input type="text" class="form-control" id="featured_category" name="featured_category" placeholder="Enter featured category" value="{{ old('featured_category', $freelanceCategory->featured_category) }}">
+                        <select class="form-control" id="featured_category" name="featured_category">
+                            <option value="">Select</option>
+                            <option value="1" {{ $freelanceCategory->featured_category == 1 ? 'selected' : '' }}>Yes</option>
+                            <option value="0" {{ $freelanceCategory->featured_category == 0 ? 'selected' : '' }}>No</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="category_image">Category Image</label>
@@ -48,10 +52,6 @@
                         @if(!empty($freelanceCategory->cover_image))
                             <img src="{{ asset('admin/freelance/cover_image/smallimage/' . $freelanceCategory->cover_image) }}" height="70px">
                         @endif
-                    </div>
-                    <div class="form-group">
-                        <label for="category_discount">Category Discount</label>
-                        <input type="number" step="0.01" class="form-control" id="category_discount" name="category_discount" placeholder="Enter category discount" value="{{ old('category_discount', $freelanceCategory->category_discount) }}">
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
