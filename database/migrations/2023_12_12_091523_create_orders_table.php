@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('orders')) {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
@@ -33,6 +34,7 @@ return new class extends Migration
             
             $table->timestamps();
         });
+    }
     }
 
     /**

@@ -106,8 +106,8 @@
                         <td>{{ $product['product_name'] }}</td>
                         <td>{{ $product['product_code'] }}</td>
                         <td>{{ $product['product_color'] }}</td>
-                        <td>{{ $product['category']['category_name'] }}</td>
-                        <td>{{ $product['section']['name'] }}</td>
+                        <td>{{ $product['category']['category_name']?? '' }}</td>
+                        <td>{{ $product['section']['name'] ?? ''}}</td>
                         <td>
                            @if(!empty($product['product_image']))
                              <img style="height: 70px;"src="{{ asset('admin/product_image/smallimage/' . $product['product_image']) }}">

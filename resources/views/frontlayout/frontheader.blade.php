@@ -197,7 +197,7 @@
                <form action="{{ url()->current() }}" method="get">
                   <div class="header-search-wrapper search-wrapper-wide">
                      <!-- <input type="search" class="form-control" name="search" id="q" placeholder="Search" required> -->
-                     <input type="search" name="query" id="q" class="form-control" placeholder="Search for products..." value="{{ request()->input('query') }}">
+                     <input type="search" name="search" id="q" class="form-control" placeholder="Search for products..." value="{{ request()->input('search') }}">
                      <button class="btn" type="submit"><i class="icon-search"></i></button>
                   </div>
                   <!-- End .header-search-wrapper -->

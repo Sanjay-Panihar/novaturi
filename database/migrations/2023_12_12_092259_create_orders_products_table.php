@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('orders_products')) {
+
         Schema::create('orders_products', function (Blueprint $table) {
             $table->id();
             $table->integer('order_id');
@@ -26,6 +28,7 @@ return new class extends Migration
             $table->integer('product_qty');
             $table->timestamps();
         });
+    }
     }
 
     /**

@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('acrylics_products')) {
+
         Schema::create('acrylics_products', function (Blueprint $table) {
             $table->id();
             $table->string('product_code');
@@ -22,6 +24,7 @@ return new class extends Migration
             $table->string('product_image');
             $table->timestamps();
         });
+    }
     }
 
     /**

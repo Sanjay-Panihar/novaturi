@@ -509,65 +509,72 @@
          </div>
          <!-- End .heading -->
          <div class="tab-content tab-content-carousel">
-            <div class="tab-pane p-0 fade show active" id="clot-new-tab" role="tabpanel" aria-labelledby="clot-new-link">
-               <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
-                  data-owl-options='{
-                  "nav": false, 
-                  "dots": true,
-                  "margin": 20,
-                  "loop": false,
-                  "responsive": {
-                  "0": {
-                  "items":2
-                  },
-                  "480": {
-                  "items":2
-                  },
-                  "768": {
-                  "items":3
-                  },
-                  "992": {
-                  "items":4
-                  },
-                  "1280": {
-                  "items":5,
-                  "nav": true
-                  }
-                  }
-                  }'>
-                  @foreach($allproduct as $product)
-                  <div class="product">
-                     <figure class="product-media">
-                        <a href="{{url('product/'.$product['id'])}}">
-                        <img src="{{ asset('admin/product_image/smallimage/' . $product['product_image']) }}" alt="{{ $product['product_image'] }}" style="border-radius: 140px;">
-                        </a>
-                     </figure>
-                     <!-- End .product-media -->
-                     <div class="product-body">
-                        <h3 class="product-title"><a href="{{url('product/'.$product['id'])}}">{{ $product['product_name']}}</a></h3>
-                        <!-- End .product-ti{{ $category['category_name']}}tle -->
-                        <center>
-                           <h4>₹ {{ $product['product_price']}}</h4>
-                        </center>
-                        <div class="ratings-container">
-                           <div class="ratings">
-                              <div class="ratings-val" style="width: 80%;"></div>
-                              <!-- End .ratings-val -->
-                           </div>
-                           <!-- End .ratings -->
-                           <span class="ratings-text">( 12 Reviews )</span>
+    <div class="tab-pane p-0 fade show active" id="clot-new-tab" role="tabpanel" aria-labelledby="clot-new-link">
+        @if(count($allproduct) > 0)
+            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                data-owl-options='{
+                    "nav": false, 
+                    "dots": true,
+                    "margin": 20,
+                    "loop": false,
+                    "responsive": {
+                        "0": {
+                            "items":2
+                        },
+                        "480": {
+                            "items":2
+                        },
+                        "768": {
+                            "items":3
+                        },
+                        "992": {
+                            "items":4
+                        },
+                        "1280": {
+                            "items":5,
+                            "nav": true
+                        }
+                    }
+                }'>
+                @foreach($allproduct as $product)
+                    <div class="product">
+                        <figure class="product-media">
+                            <a href="{{url('product/'.$product['id'])}}">
+                                <img src="{{ asset('admin/product_image/smallimage/' . $product['product_image']) }}" alt="{{ $product['product_image'] }}" style="border-radius: 140px;">
+                            </a>
+                        </figure>
+                        <!-- End .product-media -->
+                        <div class="product-body">
+                            <h3 class="product-title"><a href="{{url('product/'.$product['id'])}}">{{ $product['product_name'] }}</a></h3>
+                            <!-- End .product-title -->
+                            <center>
+                                <h4>₹ {{ $product['product_price'] }}</h4>
+                            </center>
+                            <div class="ratings-container">
+                                <div class="ratings">
+                                    <div class="ratings-val" style="width: 80%;"></div>
+                                    <!-- End .ratings-val -->
+                                </div>
+                                <!-- End .ratings -->
+                                <span class="ratings-text">( 12 Reviews )</span>
+                            </div>
+                            <!-- End .rating-container -->
                         </div>
-                        <!-- End .rating-container -->
-                     </div>
-                     <!-- End .product-body -->
-                  </div>
-                  <!-- End .product -->
-                  @endforeach
-               </div>
-               <!-- End .owl-carousel -->
+                        <!-- End .product-body -->
+                    </div>
+                    <!-- End .product -->
+                @endforeach
             </div>
-            <!-- .End .tab-pane -->
-         </div>
+            <!-- End .owl-carousel -->
+        @else
+            <div class="alert alert-warning text-center" role="alert">
+                No record found.
+            </div>
+        @endif
+    </div>
+    <!-- .End .tab-pane -->
+</div>
+
          <!-- End .tab-content -->
       </div>
       <!-- End .container -->

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-login</title>
+    <title>Forgot Password</title>
     <style>
     *{
     margin: 0;
@@ -218,99 +218,29 @@ body{
 </head>
 <body>
 <div class="login_form">
-<form action="{{url('AdminLogin')}}" method="POST" class="form">
+    <form action="{{ route('password.email') }}" method="POST" class="form">
         @csrf
-            <center><h1 class="form_title"> Login </h1></center>
-            @if(Session::has('error_message'))
-            <div class="alert alert-primary d-flex align-items-center" role="alert">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" 
-                class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
-                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-              </svg>
-               <div> Error:{{Session::get('error_message')}}</div>
-            </div>
-            @endif
-            <div class="form_div">
-                <input type="text" name="email" id="email" class ="form_input" placeholder=" " required="">
-                <label class="form_label">Email</label>
-            </div>
-
-            <div class="form_div">
-                <input type="password" name="password" id="password" class="form_input" placeholder=" " required="">
-                <label class="form_label">Password</label>
-            </div>
-
-           <!-- <div id="captcha" class="form_div">
-                <div class="preview"></div>
-                <div class="captcha_form"> 
-                    <input type="text" id="captcha_form" class="form_input_captcha" placeholder=" " >
-                    <label class="form_label_captcha">Enter Captcha</label>
-                    <button class="captcha_refersh">
-                        <img src=".\images\rotate.png" alt="">
-                    </button>
-                </div>
-            </div> -->
-
-            <input type="submit" class="form_button" value="Log In">
-             <div style="text-align: center; margin-top: 10px;">
-                <a href="{{ route('password.request') }}">Forgot Password?</a>
-            </div>
-        </form>
-    </div>
-    
+        <center><h1 class="form_title">Forgot Password</h1></center>
+        @if (session('status'))
+        <div class="alert alert-success" role="alert">
+            {{ session('status') }}
+        </div>
+        @endif
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+        <div class="form_div">
+            <input type="email" name="email" id="email" class="form_input" placeholder=" " required>
+            <label class="form_label">Email</label>
+        </div>
+        <input type="submit" class="form_button" value="Send Password Reset Link">
+    </form>
+</div>
 </body>
-<script>
-    /*(function(){
-    const fonts = ["cursive"];
-    let captchaValue = "";
-    function gencaptcha()
-    {
-        let value = btoa(Math.random()*1000000000);
-        value = value.substr(0,5 + Math.random()*5);
-        captchaValue = value;
-    }
-
-    function setcaptcha()
-    {
-        let html = captchaValue.split("").map((char)=>{
-            const rotate = -20 + Math.trunc(Math.random()*30);
-            const font = Math.trunc(Math.random()*fonts.length);
-            return`<span
-            style="
-            transform:rotate(${rotate}deg);
-            font-family:${font[font]};
-            "
-           >${char} </span>`;
-        }).join("");
-        document.querySelector(".login_form #captcha .preview").innerHTML = html;
-    }
-
-    function initCaptcha()
-    {
-        document.querySelector(".login_form #captcha .captcha_refersh").addEventListener("click",function(){
-            gencaptcha();
-            setcaptcha();
-        });
-
-        gencaptcha();
-        setcaptcha();
-    }
-    initCaptcha();
-
-    document.querySelector(".login_form .form_button").addEventListener("click",function(){
-        let inputcaptchavalue = document.querySelector(".login_form #captcha input").value;
-
-        if (inputcaptchavalue != captchaValue) 
-        {
-            // swal("","Log in","success");
-            alert("invalid captcha");
-        }
-        else
-        {
-            // swal("Invalid Captcha");
-            //alert("Invalid Captcha");
-        }
-    });
-})();
-</script>
 </html>

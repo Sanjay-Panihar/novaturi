@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('users')) {
         Schema::table('users', function (Blueprint $table) {
             $table->string('address')->after('name');
             $table->string('city')->after('address');
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->string('mobile')->after('pincode');
             $table->tinyInteger('status')->after('password');
         });
+    }
     }
 
     /**

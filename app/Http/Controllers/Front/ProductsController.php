@@ -21,43 +21,30 @@ use DB;
 
 class ProductsController extends Controller
 {
-    public function listing(Request $request) {
+    public function listing(){
         $url = Route::getFacadeRoot()->current()->uri();
-        $categoryCount = Category::where(['url' => $url, 'category_status' => 1])->count();
-    
-        if ($categoryCount > 0) {
+        $categoryCount = Category::where(['url'=>$url,'category_status'=>1])->count();
+        if ($categoryCount>0) {
             $categoryDetails = Category::categoryDetails($url);
-            $productsQuery = Product::whereIn('category_id', $categoryDetails['catIds'])
-                                    ->where('product_status', 1);
-    
-            // Check for search query
-            if ($request->has('query') && !empty($request->input('query'))) {
-                $query = $request->input('query');
-                $productsQuery->where(function($q) use ($query) {
-                    $q->where('name', 'LIKE', "%{$query}%")
-                      ->orWhere('description', 'LIKE', "%{$query}%")
-                      ->orWhere('shortdescription', 'LIKE', "%{$query}%")
-                      ->orWhere('description', 'LIKE', "%{$query}%")
-                      ->orWhere('description', 'LIKE', "%{$query}%")
-                      ->orWhere('description', 'LIKE', "%{$query}%");
-                });
-            }
-    
-            // Sorting
-            if ($request->has('sort') && !empty($request->input('sort'))) {
-                if ($request->input('sort') == "product_latest") {
-                    $productsQuery->orderBy('products.id', 'DESC');
+            $categoryProducts = Product::whereIn('category_id',$categoryDetails['catIds'])->
+            where('product_status',1)->paginate(3);
+
+            if (isset($_GET['sort']) && !empty($_GET['sort'])) {
+                if($_GET['sort']=="product_latest"){
+                    $categoryProducts->orderby('products.id','Desc');    
                 }
+                
             }
-    
-            $categoryProducts = $productsQuery->paginate(3);
-    
-            return view('shop-grid')->with(compact('categoryDetails', 'categoryProducts'));
-        } else {
+            //dd($categoryDetails);
+            //dd($categoryProducts);
+            //echo "Category exists "; die;
+            return view('shop-grid')->with(compact('categoryDetails','categoryProducts'));
+        }else{
             abort(404);
         }
     }
-    
+
+
     public function detail($id){
         $productDetails = Product::with('section','category','attributes','images')->find($id)->toArray();
         $categoryDetails = category::categoryDetails($productDetails['category']['url']);

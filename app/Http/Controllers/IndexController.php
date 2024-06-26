@@ -14,25 +14,60 @@ use DB;
 
 class IndexController extends Controller
 {
-    public function homepage()
+    public function homepage(Request $request)
     {
-        $featuredCategories = Category::where("featured_category", 1)->get()->reverse() // Reversing the collection
-    ->toArray(); // Converting to array
+        // Fetch all items that do not depend on search input
+        $featuredCategories = Category::where("featured_category", 1)->get()->reverse();
+        $allCategories = Category::all();
+        $allmockup = Mockup::all()->reverse();
+        $allevent = Event::latest()->limit(4)->get();
 
+        // Initialize the products query with eager loading
+        $productsQuery = Product::with(['section', 'category', 'vendor']);
 
-        $allCategories = Category::all()->toArray();
-        $allproduct = Product::all()->reverse()->toArray();
-        $allmockup = Mockup::all()->reverse()->toArray();
+        // Check for search query
+        if ($request->has('search') && !empty($request->input('search'))) {
+            $searchTerm = $request->input('search');
+            $productsQuery->where(function ($q) use ($searchTerm) {
+                $q->where('product_name', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('description', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('shortdescription', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('product_code', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('product_image', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('group_code', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('fabrics', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('meta_title', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('meta_description', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('product_price', 'LIKE', "%{$searchTerm}%")
+                    ->orWhereHas('section', function ($query) use ($searchTerm) {
+                        $query->where('name', 'LIKE', "%{$searchTerm}%");
+                    })
+                    ->orWhereHas('category', function ($query) use ($searchTerm) {
+                        $query->where('category_name', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('featured_category', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('meta_title', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('meta_description', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('meta_keywords', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('description', 'LIKE', "%{$searchTerm}%");
+                    })
+                    ->orWhereHas('vendor', function ($query) use ($searchTerm) {
+                        $query->where('name', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('mobile', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+                    });
+            });
+        }
 
-        $allevent = Event::latest()->limit(4)->get()->toArray();
-        //dd($allevent);
+        // Execute the query and get products
+        $allproduct = $productsQuery->get()->reverse();
 
         return view("index")->with(
             compact(
                 "featuredCategories",
                 "allCategories",
                 "allproduct",
-                "allevent","allmockup"
+                "allevent",
+                "allmockup"
             )
         );
     }
@@ -87,12 +122,12 @@ class IndexController extends Controller
 
     public function viewsupliersdetails(Request $request)
     {
-    // Fetch suppliers and their details
-    $suppliers = DB::table("vendors")
-        ->join("vendors_business_details", "vendors.id", "=", "vendors_business_details.vendor_id")
-        ->select(
-            "vendors.*",
-            "vendors_business_details.Business_name",
+        // Fetch suppliers and their details
+        $suppliers = DB::table("vendors")
+            ->join("vendors_business_details", "vendors.id", "=", "vendors_business_details.vendor_id")
+            ->select(
+                "vendors.*",
+                "vendors_business_details.Business_name",
                 "vendors_business_details.city",
                 "vendors_business_details.state",
                 "vendors_business_details.Country",
@@ -114,14 +149,15 @@ class IndexController extends Controller
                 "vendors_business_details.Business_gst",
                 "vendors_business_details.moq_of_product",
                 "vendors_business_details.Gst_number"
-        )
-        ->where("vendors.id", $request->id)
-        ->get();
+            )
+            ->where("vendors.id", $request->id)
+            ->get();
 
-    return view("supliersprofile")->with(compact("suppliers"));
-}
+        return view("supliersprofile")->with(compact("suppliers"));
+    }
 
-    public function contact() {
-        return view("contactus");    
+    public function contact()
+    {
+        return view("contactus");
     }
 }

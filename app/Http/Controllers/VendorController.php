@@ -11,6 +11,7 @@ use App\Models\VendorsBankDetails;
 use Validator;
 use hash;
 use DB;
+use Illuminate\Support\Facades\Password;
 
 class VendorController extends Controller
 {
@@ -155,4 +156,45 @@ class VendorController extends Controller
         return view('vendordetails')->with(compact('supliers'));
 
     }
+    public function showLinkRequestForm(Request $request){
+        return view('admin.forgot_password');
+    }
+    public function sendResetLinkEmail(Request $request){
+        $request->validate(['email' => 'required|email']);
+        $response = Password::broker('vendors')->sendResetLink(
+            $request->only('email')
+        );
+        return $response == Password::RESET_LINK_SENT
+                    ? back()->with(['status' => __($response)])
+                    : back()->withErrors(['email' => __($response)]);
+    }
+    public function showResetForm(Request $request, $token = null) {
+        return view('admin.password_reset')->with(['token' => $token, 'email' => $request->email]);
+
+    }
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        $status = Password::broker('vendors')->reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($vendor, $password) {
+                // Find the admin record associated with this vendor
+                $admin = Admin::where('email', $vendor->email)->first();
+                if ($admin) {
+                    $admin->password = bcrypt($password);
+                    $admin->save();
+                }
+            }
+        );
+
+        return $status == Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
+    }
+
 }

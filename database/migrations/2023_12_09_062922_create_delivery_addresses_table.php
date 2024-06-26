@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('delivery_addresses')) {
         Schema::create('delivery_addresses', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->tinyInteger('status');
             $table->timestamps();
         });
+    }
     }
 
     /**

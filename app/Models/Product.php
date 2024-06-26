@@ -14,17 +14,17 @@ class Product extends Model
 {
     use HasFactory;
     public function section(){
-        return $this->belongsTo('App\Models\Section','section_id');
+        return $this->belongsTo(Section::class);
     }
     public function category(){
-        return $this->belongsTo('App\Models\Category','category_id');
+        return $this->belongsTo(Category::class);
     }
     public function attributes(){
         return $this->hasMany('App\Models\ProductsAttribute');
     }
     
     public function vendor(){
-        return $this->hasMany('App\Models\Vendor');
+        return $this->belongsTo(Vendor::class);
     }
 
     public function images(){

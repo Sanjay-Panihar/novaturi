@@ -25,7 +25,7 @@ class Category extends Model
 
     public static function getCategoryName($category_id){
         $getCategoryName = Category::select('category_name')->where('id',$category_id)->first();
-        return $getCategoryName->category_name;
+        return $getCategoryName->category_name ?? "";
 
     }
 

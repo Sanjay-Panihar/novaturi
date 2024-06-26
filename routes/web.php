@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\SupplierCategoryController;
+use App\Http\Controllers\FreelanceCategoryController;
 use App\Http\Middleware\Admin;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SectionController;
@@ -21,6 +24,7 @@ use App\Http\Controllers\EvenCategoryController;
 use App\Http\Controllers\EventController;
 use App\Models\Category;
 use App\Models\EvenCategory;
+use App\Models\FreelanceCategory;
 use App\Models\Mockupcategory;
 use App\Http\Controllers\Mockups\MockupscategoryController;
 use App\Http\Controllers\Mockups\MockupssectionController;
@@ -111,8 +115,12 @@ Route::group(['middleware'=>['admin']],function(){
     Route::get('Categories',[CategoryController::class,'Categories'])->name('Categories'); 
     Route::get('delete-category/{id}',[CategoryController::class,'deletecategory'])->name('deletecategory');
     Route::match(['get', 'post'], 'Add-Edit-category/{id?}', [CategoryController::class, 'AddEditcategory'])->name('AddEditcategory');
-    Route::match(['get', 'post'], 'business-category/{id?}', [CategoryController::class, 'AddEditcategory'])->name('business-category');
    /////////////////////----------------end-----------------------------------------/////////
+
+   Route::resource('business-category', BusinessCategoryController::class);
+   Route::resource('supplier-category', SupplierCategoryController::class);
+   Route::resource('freelance-category', FreelanceCategoryController::class);
+
     ////product section ////////////////-----------------------------------------------------------------------
     Route::get('products',[ProductController::class,'products'])->name('products'); 
     Route::post('update-product-status',[ProductController::class,'updateproductstatus'])->name('updateproductstatus');
@@ -164,6 +172,12 @@ Route::group(['middleware'=>['admin']],function(){
 ////////////////////////////////vendor section//////////////////////////////////////////////
 
 Route::get('Vendor login and registration',[VendorController::class,'Vendorloginfun'])->name('Vendorloginfun'); 
+
+Route::get('forgot/password',[VendorController::class,'showLinkRequestForm'])->name('password.request'); 
+Route::post('password/email',[VendorController::class,'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [VendorController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [VendorController::class, 'reset'])->name('password.update');
+
 
 Route::POST('Vendor/registration',[VendorController::class,'Vendor_registration'])->name('Vendor_registration'); 
 
