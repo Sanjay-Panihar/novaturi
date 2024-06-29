@@ -162,6 +162,10 @@ class AdminController extends Controller
                     "sell_in_wholesale" => "required",
                     "moq_of_product" =>  "required",
                     "brand"  => "required",
+                    "keyservice1" => "required|string|max:15",
+                    "keyservice2" => "required|string|max:15",
+                    "keyservice3" => "required|string|max:15",
+
                 ];
                 $customMessages = [
                     "business_name.required" => "Business Name is required",
@@ -209,7 +213,7 @@ class AdminController extends Controller
                     $logoName = ""; // Set empty logo name if no logo uploaded
                 }
 
-                //upload catalogue Photo
+                // //upload catalogue Photo
                 if ($request->hasFile("Business_catalogue")) {
                     $pdfFile = $request->file("Business_catalogue");
 
@@ -276,7 +280,7 @@ class AdminController extends Controller
                     "Country" => $data["Country"],
                     "state" => $data["state"],
                     "city" => $data["city"],
-                    "Business_catalogue" => $pdfName,
+                    // "Business_catalogue" => $pdfName,
                     "sell_in_wholesale" => $data["sell_in_wholesale"],
                     "moq_of_product" => $data["moq_of_product"],
                     "websitelink" => $data["websitelink"],
@@ -290,8 +294,9 @@ class AdminController extends Controller
                     "keyservice1" => $data["keyservice1"],
                     "keyservice2" => $data["keyservice2"],
                     "keyservice3" => $data["keyservice3"],
-                    "product_sample" => implode(",", $productImageNames),
-                    "logo" => $logoName,
+                    "certificate" => $data["certificate"],
+                    // "product_sample" => implode(",", $productImageNames),
+                    // "logo" => $logoName,
                     "delivery_time" => $data["delivery_time"],
                 ]);
 

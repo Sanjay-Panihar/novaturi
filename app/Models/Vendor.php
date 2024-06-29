@@ -12,4 +12,9 @@ use Illuminate\Notifications\Notifiable;
 class Vendor extends Authenticatable implements CanResetPasswordContract
 {
     use HasFactory, CanResetPassword, Notifiable;
+
+    public function freelanceCatetory() {
+
+        return $this->hasMany(FreelanceCategory::class, 'id', 'Business_Category');
+    }
 }

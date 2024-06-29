@@ -138,4 +138,9 @@ class SupplierCategoryController extends Controller
     
         return redirect()->route('supplier-category.index')->with('Success_message', 'Supplier category has been deleted successfully.');
     }
+    public function getSupplierCategories() {
+        $supplierCategory = SupplierCategory::select('id', 'category_name')->where('category_status', 1)->orderBy('category_name', 'ASC')->get();
+
+        return response()->json(['data' =>$supplierCategory]);
+    }
 }

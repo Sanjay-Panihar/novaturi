@@ -78,6 +78,7 @@ class VendorController extends Controller
         
         $admin = new VendorsBusinessDetails;
         $admin->vendor_id = $vendor_id;
+        $admin->vendorType = $data['vendorType'];
         $admin->save();
 
         $admin = new VendorsBankDetails;

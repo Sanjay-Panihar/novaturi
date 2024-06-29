@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FreelanceCategory;
+use App\Models\SupplierCategory;
 use Illuminate\Http\Request;
 use App\Models\Vendor;
 use App\Models\VendorsBusinessDetails;
@@ -124,36 +126,69 @@ class IndexController extends Controller
     {
         // Fetch suppliers and their details
         $suppliers = DB::table("vendors")
-            ->join("vendors_business_details", "vendors.id", "=", "vendors_business_details.vendor_id")
-            ->select(
-                "vendors.*",
-                "vendors_business_details.Business_name",
-                "vendors_business_details.city",
-                "vendors_business_details.state",
-                "vendors_business_details.Country",
-                "vendors_business_details.Brand_name",
-                "vendors_business_details.websitelink",
-                "vendors_business_details.Business_Category",
-                "vendors_business_details.sell_in_wholesale",
-                "vendors_business_details.Business_catalogue",
-                "vendors_business_details.delivery_time",
-                "vendors_business_details.product_sample",
-                "vendors_business_details.facebook",
-                "vendors_business_details.instagram",
-                "vendors_business_details.twitter",
-                "vendors_business_details.linkedin",
-                "vendors_business_details.youtube",
-                "vendors_business_details.brand",
-                "vendors_business_details.service",
-                "vendors_business_details.usp_and_specialservice",
-                "vendors_business_details.Business_gst",
-                "vendors_business_details.moq_of_product",
-                "vendors_business_details.Gst_number"
-            )
-            ->where("vendors.id", $request->id)
-            ->get();
+        ->join("vendors_business_details", "vendors.id", "=", "vendors_business_details.vendor_id")
+        ->select(
+            "vendors.*",
+            "vendors_business_details.Business_name",
+            "vendors_business_details.city",
+            "vendors_business_details.state",
+            "vendors_business_details.Country",
+            "vendors_business_details.Brand_name",
+            "vendors_business_details.websitelink",
+            "vendors_business_details.Business_Category",
+            "vendors_business_details.sell_in_wholesale",
+            "vendors_business_details.Business_catalogue",
+            "vendors_business_details.delivery_time",
+            "vendors_business_details.product_sample",
+            "vendors_business_details.facebook",
+            "vendors_business_details.instagram",
+            "vendors_business_details.twitter",
+            "vendors_business_details.linkedin",
+            "vendors_business_details.youtube",
+            "vendors_business_details.brand",
+            "vendors_business_details.service",
+            "vendors_business_details.usp_and_specialservice",
+            "vendors_business_details.Business_gst",
+            "vendors_business_details.moq_of_product",
+            "vendors_business_details.Gst_number",
+            "vendors_business_details.vendorType",
+            "vendors_business_details.keyservice1",
+            "vendors_business_details.keyservice2",
+            "vendors_business_details.keyservice3"
+        )
+        ->where("vendors.id", $request->id)
+        ->get();
 
-        return view("supliersprofile")->with(compact("suppliers"));
+    // Check if suppliers collection is not empty
+    if ($suppliers->isNotEmpty()) {
+        // Initialize an empty array to store categories
+        $categories = [];
+
+        // Loop through each supplier
+        foreach ($suppliers as $supplier) {
+            // Check vendorType for each supplier
+            if ($supplier->vendorType == "Supplier") {
+                // Fetch categories for Supplier
+                $supplierCategories = SupplierCategory::select('id', 'category_name', 'cover_image')->whereIn('id', json_decode($supplier->Business_Category))->get();
+                // Merge categories
+                $categories[$supplier->id] = $supplierCategories;
+            } else {
+                // Fetch categories for Freelance
+                $freelanceCategories = FreelanceCategory::select('id', 'category_name', 'cover_image')->whereIn('id', json_decode($supplier->Business_Category))->get();
+                // Merge categories
+                $categories[$supplier->id] = $freelanceCategories;
+            }
+        }
+
+        // Attach categories to each supplier
+        foreach ($suppliers as $supplier) {
+            if (isset($categories[$supplier->id])) {
+                $supplier->categories = $categories[$supplier->id];
+            }
+        }
+    }
+    // echo '<pre>'; print_r($suppliers); die;
+    return view("supliersprofile", compact("suppliers"));
     }
 
     public function contact()

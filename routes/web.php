@@ -117,7 +117,8 @@ Route::group(['middleware'=>['admin']],function(){
     Route::match(['get', 'post'], 'Add-Edit-category/{id?}', [CategoryController::class, 'AddEditcategory'])->name('AddEditcategory');
    /////////////////////----------------end-----------------------------------------/////////
 
-   Route::resource('business-category', BusinessCategoryController::class);
+   Route::get('get-supplier-categories', [SupplierCategoryController::class, 'getSupplierCategories']);
+   Route::get('get-freelancer-categories', [FreelanceCategoryController::class, 'getFreelancerCategories']);
    Route::resource('supplier-category', SupplierCategoryController::class);
    Route::resource('freelance-category', FreelanceCategoryController::class);
 

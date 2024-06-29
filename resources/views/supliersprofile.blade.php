@@ -209,8 +209,9 @@
    @php
    // Decode the JSON array of categories
    $categories = json_decode($suplier->Business_Category);
+   {{dd($suplier);}}
    // Define default banner image
-   $defaultBanner = 'default-banner.png';
+   $defaultBanner = 'default-banner.jpg';
    // Define mapping between categories and banner images
    $bannerImages = [
    'Brand Labels & Tags' => 'Brand Labels & Tags (1).jpg',
@@ -341,6 +342,43 @@
             <!-- End .col-lg-10 offset-1 -->
          </div>
          <!-- End .row -->
+         <h2 class="title text-center " style="padding: 15px; background: #beefd8;">Key Services</h2>
+         <!-- End .title text-center mb-2 -->
+         <div class="row justify-content-center" style="padding: 25px;">
+            <div class="col-lg-4 col-sm-6">
+               <div class="icon-box icon-box-sm text-center">
+                  <div class="icon-box-content">
+                     <h3 class="icon-box-title"><span style="border-radius: 20px; padding: 0px 10px;  margin-right: 10px; font-weight: 600; ">Key Service1</span>{{$suplier->keyservice1 ?? 'Not Available' }}</h3>
+                     <!-- End .icon-box-title -->
+                  </div>
+                  <!-- End .icon-box-content -->
+               </div>
+               <!-- End .icon-box -->
+            </div>
+            <!-- End .col-lg-4 col-sm-6 -->
+            <div class="col-lg-4 col-sm-6">
+               <div class="icon-box icon-box-sm text-center">
+                  <div class="icon-box-content">
+                     <h3 class="icon-box-title"><span style="border-radius: 20px; padding: 0px 10px;  margin-right: 10px; font-weight: 600; ">Key Service2</span>{{$suplier->keyservice2 ?? 'Not Available'}}</h3>
+                     <!-- End .icon-box-title -->
+                  </div>
+                  <!-- End .icon-box-content -->
+               </div>
+               <!-- End .icon-box -->
+            </div>
+            <!-- End .col-lg-4 col-sm-6 -->
+            <div class="col-lg-4 col-sm-6">
+               <div class="icon-box icon-box-sm text-center">
+                  <div class="icon-box-content">
+                     <h3 class="icon-box-title"><span style="border-radius: 20px; padding: 0px 10px;  margin-right: 10px; font-weight: 600;">Key Service3</span>{{$suplier->keyservice3 ?? 'Not Available'}}</h3>
+                     <!-- End .icon-box-title --> 
+                  </div>
+                  <!-- End .icon-box-content -->
+               </div>
+               <!-- End .icon-box -->
+            </div>
+            <!-- End .col-lg-4 col-sm-6 -->
+         </div>
          <h2 class="title text-center " style="padding: 15px; background: #faafc6;">Key Attributes</h2>
          <!-- End .title text-center mb-2 -->
          <div class="row justify-content-center" style="padding: 25px;">

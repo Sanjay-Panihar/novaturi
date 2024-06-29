@@ -45,9 +45,6 @@
     </div><!-- ./wrapper -->
 
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-------------------------custom js------------------------------>
-    <script src="{{asset('js/custom.js')}}">
-      
     </script>
     <!------------------------------------------------------->
     <!-- jQuery UI 1.11.2 -->
@@ -82,11 +79,8 @@
     <script src="{{asset('plugins/fastclick/fastclick.min.js')}}"></script>
     <!-- AdminLTE App -->
     <script src="{{asset('dist/js/app.min.js')}}" type="text/javascript"></script>
-    <!----------------------------------------------------------------->
-    <!----------------------------------------------------------------->
-    
-  
-
-   
+    @yield('scripts')
+    <!-------------------------custom js------------------------------>
+    <script src="{{asset('js/custom.js')}}"></script>
   </body>
 </html>

@@ -310,7 +310,7 @@
                         </div>
                         <div class="form-group">
                            <label>Select Business Category</label>
-                              <select class="form-control" name="Business_Category[]" multiple>
+                              <select class="form-control" name="Business_Category[]" multiple id="">
                                  <!-- Optionsbe will  dynamically added here -->
                               </select>
                         </div>

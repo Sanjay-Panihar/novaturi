@@ -141,5 +141,9 @@ class FreelanceCategoryController extends Controller
     
         return $freelanceCategory;
     }
-    
+    public function getFreelancerCategories() {
+        $freelanceCategory = FreelanceCategory::select('id', 'category_name')->where('category_status', 1)->orderBy('category_name', 'ASC')->get();
+
+        return response()->json(['data' =>$freelanceCategory]);
+    }
 }
