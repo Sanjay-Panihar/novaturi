@@ -131,7 +131,7 @@ function updateBusinessCategoryOptions(options, selectedCategoryIds) {
 
     // Add new options
     $.each(options, function (index, option) {
-        var $option = $('<option>').text(option.category_name).val(option.id);
+        var $option = $('<option>').text(option.category_name).val(option.category_name);
 
         // Check if this option's ID is in selectedCategoryIds and mark it as selected
         if (selectedCategoryIds.includes(option.id.toString())) {

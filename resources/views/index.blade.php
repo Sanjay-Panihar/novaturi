@@ -129,11 +129,10 @@
             }
             }'>
                @foreach ($supplierCategories as $supplierCategory)
-               <a href="{{ route('suppliers', [$supplierCategory['category_name'], $supplierCategory->id]) }}"
-                 class="brand">
-                 <center><img
-                     src="{{ asset('admin/supplier/category_image/smallimage/' . json_decode($supplierCategory->category_image)[0]) }}"
-                     alt="Brand Name"></center>
+               <a href="{{ url('suppliers/' . $supplierCategory['category_name']) }}" class="brand">
+               <center><img src="{{ asset('admin/supplier/category_image/smallimage/' . json_decode($supplierCategory->category_image)[0]) }}"
+                     alt="Brand Name">
+                  </center>
                  <div>
                    <h4 style="font-size: 1.4rem; padding-top: 2rem;">{{ $supplierCategory['category_name'] }} </h4>
                  </div>

@@ -341,7 +341,7 @@
                      <div class="form-group col-md-6">
                         <label> Vendor Type</label>
                        
-                        <input type="text" name="vendorType" value="{{ $vendorDetails['vendorType'] }}" class="form-control" readonly>
+                        <input type="text" name="vendorType" value="{{ $vendorDetails['vendorType'] }}" class="form-control" id="vendorType" readonly>
                      </div>
                      <div class="form-group">
                         <label>Select Business Category</label>
