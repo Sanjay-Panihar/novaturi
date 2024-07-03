@@ -23,7 +23,9 @@ class IndexController extends Controller
         $allCategories = Category::all();
         $allmockup = Mockup::all()->reverse();
         $allevent = Event::latest()->limit(4)->get();
-
+        $freelanceCategories = FreelanceCategory::select('id', 'category_name', 'category_image', 'cover_image')->where('category_status', 1)->get()->reverse();
+        $supplierCategories = SupplierCategory::select('id', 'category_name', 'category_image', 'cover_image')->where('category_status', 1)->get()->reverse();
+        
         // Initialize the products query with eager loading
         $productsQuery = Product::with(['section', 'category', 'vendor']);
 
@@ -69,7 +71,9 @@ class IndexController extends Controller
                 "allCategories",
                 "allproduct",
                 "allevent",
-                "allmockup"
+                "allmockup",
+                'freelanceCategories',
+                'supplierCategories'
             )
         );
     }

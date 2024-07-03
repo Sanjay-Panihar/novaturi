@@ -84,7 +84,7 @@ class FreelanceCategoryController extends Controller
     {
         $validatedData = $request->validate([
             'category_name'     => 'required|string|max:255',
-            'featured_category' => 'nullable|string|max:255',
+            'featured_category' => 'required|string|max:255',
             'category_image'    => 'nullable|array',
             'category_image.*'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cover_image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -119,19 +119,16 @@ class FreelanceCategoryController extends Controller
         // If updating, delete old images if new ones are provided
         if ($freelanceCategory) {
             if (!empty($freelanceCategory->category_image) && $request->hasFile('category_image')) {
-                $oldImages = json_decode($freelanceCategory->category_image);
+                $oldImages = json_decode($freelanceCategory->category_image, true);
                 foreach ($oldImages as $oldImage) {
-                    $imagePath = public_path('admin/freelance/category_image/smallimage/' . $oldImage);
-                    if (file_exists($imagePath)) {
-                        unlink($imagePath);
+                    if (is_string($oldImage) && file_exists(public_path('admin/freelance/category_image/smallimage/' . $oldImage))) {
+                        unlink(public_path('admin/freelance/category_image/smallimage/' . $oldImage));
                     }
                 }
             }
-            // Handle old cover image
             if (!empty($freelanceCategory->cover_image) && $request->hasFile('cover_image')) {
-                $coverImagePath = public_path('admin/freelance/cover_image/smallimage/' . $freelanceCategory->cover_image);
-                if (file_exists($coverImagePath)) {
-                    unlink($coverImagePath);
+                if (file_exists(public_path('admin/freelance/cover_image/smallimage/' . $freelanceCategory->cover_image))) {
+                    unlink(public_path('admin/freelance/cover_image/smallimage/' . $freelanceCategory->cover_image));
                 }
             }
             $freelanceCategory->update($validatedData);
@@ -141,9 +138,12 @@ class FreelanceCategoryController extends Controller
     
         return $freelanceCategory;
     }
-    public function getFreelancerCategories() {
+    
+    
+    public function getFreelancerCategories()
+    {
         $freelanceCategory = FreelanceCategory::select('id', 'category_name')->where('category_status', 1)->orderBy('category_name', 'ASC')->get();
 
-        return response()->json(['data' =>$freelanceCategory]);
+        return response()->json(['data' => $freelanceCategory]);
     }
 }

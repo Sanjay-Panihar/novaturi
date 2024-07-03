@@ -47,7 +47,7 @@ class SupplierCategoryController extends Controller
     {
         $validatedData = $request->validate([
             'category_name'     => 'required|string|max:255',
-            'featured_category' => 'nullable|string|max:255',
+            'featured_category' => 'required|string|max:255',
             'category_image'    => 'nullable|array',
             'category_image.*'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cover_image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -89,7 +89,6 @@ class SupplierCategoryController extends Controller
                     }
                 }
             }
-            // Handle old cover image
             if (!empty($supplierCategory->cover_image) && $request->hasFile('cover_image')) {
                 if (file_exists(public_path('admin/supplier/cover_image/smallimage/' . $supplierCategory->cover_image))) {
                     unlink(public_path('admin/supplier/cover_image/smallimage/' . $supplierCategory->cover_image));

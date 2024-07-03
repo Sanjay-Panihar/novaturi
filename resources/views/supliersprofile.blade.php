@@ -209,7 +209,6 @@
    @php
    // Decode the JSON array of categories
    $categories = json_decode($suplier->Business_Category);
-   {{dd($suplier);}}
    // Define default banner image
    $defaultBanner = 'default-banner.jpg';
    // Define mapping between categories and banner images

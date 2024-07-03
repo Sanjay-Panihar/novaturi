@@ -35,12 +35,15 @@
                     <div class="form-group">
                         <label for="featured_category">Featured Category</label>
                         <select class="form-control" id="featured_category" name="featured_category">
-                            <option value="">Select</option>
+                            <option>Select</option>
                             <option value="1" {{ $supplierCategory->featured_category == 1 ? 'selected' : '' }}>Yes
                             </option>
                             <option value="0" {{ $supplierCategory->featured_category == 0 ? 'selected' : '' }}>No
                             </option>
                         </select>
+                        @error('featured_category')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="form-group">
