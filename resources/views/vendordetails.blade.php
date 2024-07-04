@@ -89,7 +89,7 @@
                      <p class="card-text"><small class="text-muted">{{ $supplier->mobile }}</small></p>
                      <p class="card-text"><small class="text-muted">{{ $supplier->email }}</small></p>
                      <button type="button" class="btn btn-primary mt-3 btn-rounded waves-effect w-md waves-light">
-                     <a href="{{ url('view-supliers-details/' . $supplier->id) }}" role="button" style="color:white;">
+                     <a href="{{ route('viewsupliersdetails', ['id' => $supplier->id, 'category_name' => Request::segment(2)]) }}" role="button" style="color: white;">
                      More Details</a>
                      </button>
                      <button type="button" class="btn btn-primary mt-3 btn-rounded waves-effect w-md waves-light">
@@ -109,9 +109,6 @@
          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
          @endforeach
       </div>
-      <div class="col-3" style="border-radius: 10px;
-         border: 1px solid #d5d5d5;"></div>
-   </div>
 </div>
 <div class="pagination justify-content-center">
    {{ $suppliers->links() }}

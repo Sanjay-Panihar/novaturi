@@ -173,12 +173,12 @@ class IndexController extends Controller
             // Check vendorType for each supplier
             if ($supplier->vendorType == "Supplier") {
                 // Fetch categories for Supplier
-                $supplierCategories = SupplierCategory::select('id', 'category_name', 'cover_image')->whereIn('id', json_decode($supplier->Business_Category))->get();
+                $supplierCategories = SupplierCategory::select('id', 'category_name', 'cover_image')->where('category_name',$request->category_name)->first();
                 // Merge categories
                 $categories[$supplier->id] = $supplierCategories;
             } else {
                 // Fetch categories for Freelance
-                $freelanceCategories = FreelanceCategory::select('id', 'category_name', 'cover_image')->whereIn('id', json_decode($supplier->Business_Category))->get();
+                $freelanceCategories = FreelanceCategory::select('id', 'category_name', 'cover_image')->where('category_name',$request->category_name)->first();
                 // Merge categories
                 $categories[$supplier->id] = $freelanceCategories;
             }

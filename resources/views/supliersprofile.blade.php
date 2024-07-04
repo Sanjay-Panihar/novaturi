@@ -207,65 +207,22 @@
 <main class="main">
    @foreach($suppliers as $suplier)
    @php
-   // Decode the JSON array of categories
-   $categories = json_decode($suplier->Business_Category);
-   // Define default banner image
+   $coverImage = $suplier->categories ? $suplier->categories->cover_image : 'default-banner.jpg';
+   $vendorType = $suplier->vendorType;
    $defaultBanner = 'default-banner.jpg';
-   // Define mapping between categories and banner images
-   $bannerImages = [
-   'Brand Labels & Tags' => 'Brand Labels & Tags (1).jpg',
-   'Sustainble Packaging Suppliers' => 'Sustainable Fabric Suppliers.jpg',
-   'Knitted Apparel Manufacturers - T Shirt & Hoodies' => 'Knitted Apparel Manufacturers - T Shirt & Hoodies.jpg',
-   'Fabric Printers' => 'Fabric Printers.jpg',
-   'Fabric Dyer' => 'Fabric Dyers.jpg',
-   'Sustainable Fabric Suppliers' => 'Sustainable Packaging Suppliers.jpg',
-   'Embroiders & Craftsmen' => 'Embroiders & Craftsmen.jpg',
-   'Embroidery Material Suppliers' => 'Embroidery Material Suppliers.jpg',
-   'Trims Suppliers' => 'Trims Suppliers.jpg',
-   'Apparel Manufacturers-Woven Garments' => 'Apparel Manufacturers - Woven Garments (1).jpg',
-   'Machine Suppliers' => 'machines.jpg',
-   'Bespoke Attire Makers' => 'bespoke attire makers.jpg',
-   'DTG/DTF/Heat Sublimation Printers/Puff Print' => 'banner1.png',
-   'Swimwear Manufacturer' => 'swimwear manufactures.jpg',
-   'Miscellaneous' => 'Miscellaneous.jpg',
-   'Shoe Manufacturer' => 'Shoe Manufacturers.jpg',
-   'Lifestyle Sector Suppliers' => 'Lifestyle Sector Suppliers.jpg',
-   // freelancer////
-   'Fashion Designer' => 'Fashion Designer.jpg',
-   'Graphic Designers' => 'Graphic Designers.jpg',
-   'Graphic Design Agency' => 'Graphic Design Agency.jpg',
-   'Performance & Digital Marketing Agency' => 'Performance & Digital Marketing  Agency.jpg',
-   'Performance Marketer' => 'Performance Marketer.jpg',
-   'Photographer' => 'Photographer.jpg',
-   'Marketing & PR Agency' => 'Marketing & PR Agency.jpg',
-   'Business Consultants' => 'Business Consultants.jpg',
-   '3PL Marketing Agency' => '',
-   'Website Developers' => 'website developers.jpg',
-   'NGO Tie Ups' => 'ngo tie Ups.jpg',
-   'Brand Collab Tie Ups' => 'brand collab ties ups.jpg',
-   'Photoshoot Agency' => 'photoshoot agency.jpg',
-   ];
-   // Iterate over each category to find a matching banner image
-   foreach ($categories as $category) {
-   if (isset($bannerImages[$category])) {
-   $bannerImage = $bannerImages[$category];
-   // Break out of the loop once a matching banner image is found
-   break;
-   }
-   }
-   // If no matching banner image is found, use the default one
-   $bannerImage = $bannerImage ?? $defaultBanner;
+
+   $coverImage = $coverImage ?? $defaultBanner;
    @endphp
    <div class="page-header text-center">
-      <img src="{{ asset('img/banner/cat/' . $bannerImage) }}" class="img-fluid rounded-start" alt="...">
+      <img src="{{ asset('admin/'.$vendorType.'/cover_image/smallimage/' . $coverImage) }}" class="img-fluid rounded-start" alt="...">
    </div>
    <!-- End .page-header -->
    <div style="background-color:#e5e1e1; padding: 15px;">
       <div class="container">
          <div class="row">
             <div class="col text-center">
-               <button class="btn btn-primary" style="border-radius: 25px;">
                @if($suplier->Business_catalogue)
+               <button class="btn btn-primary" style="border-radius: 25px;">
                <a class=""
                   href="{{ asset('admin/Businesscatalogue/' . $suplier->Business_catalogue) }}"
                   target="_blank" style="color:white; ">
