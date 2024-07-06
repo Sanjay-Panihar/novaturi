@@ -283,8 +283,8 @@
                  </div>
                  <!-- /.box-body -->
                </div>
-            @endif                @if($slug == "business")
-
+            @endif
+            @if($slug == "business")
                <div class="box box-warning  col-md-12">
                  <div class="box-header">
                    <h3 class="box-title">Business Details</h3>
@@ -380,7 +380,7 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="product_sample">Logo</label>
+                          <label for="logo">Logo</label>
                           <input type="file" id="logo" name="logo" multiple>
                           <p class="help-block">Upload logo image</p>
                           @error('logo')

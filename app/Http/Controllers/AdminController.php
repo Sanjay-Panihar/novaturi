@@ -158,7 +158,7 @@ class AdminController extends Controller
                     "city" => "required|regex:/[\pL\s\-]*$/u",
                     "Business_catalogue" => "file|mimes:pdf|max:40000",
                     "logo" => "image|mimes:jpeg,png,jpg,gif|max:2048",
-                    "product_sample" => "image|mimes:jpeg,png,jpg",
+                    "product_sample.*" => "image|mimes:jpeg,png,jpg",
                     "sell_in_wholesale" => "required",
                     "moq_of_product" =>  "required",
                     "brand"  => "required",
