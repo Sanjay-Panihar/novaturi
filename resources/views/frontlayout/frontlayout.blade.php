@@ -76,6 +76,7 @@
     <!-- Main JS File -->
     <script src="{{asset('front/assets/js/main.js')}}"></script>
     <script src="{{asset('front/assets/js/demos/demo-13.js')}}"></script>
+    @yield('scripts')
 </body>
 
 

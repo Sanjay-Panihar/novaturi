@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\SupplierCategoryController;
 use App\Http\Controllers\FreelanceCategoryController;
 use App\Http\Middleware\Admin;
@@ -178,6 +179,9 @@ Route::get('forgot/password',[VendorController::class,'showLinkRequestForm'])->n
 Route::post('password/email',[VendorController::class,'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [VendorController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [VendorController::class, 'reset'])->name('password.update');
+Route::post('/submit-review', [RatingController::class, 'submitReview'])->name('submit.review');
+Route::get('/get-review', [RatingController::class, 'getReview'])->name('get.review');
+
 
 
 Route::POST('Vendor/registration',[VendorController::class,'Vendor_registration'])->name('Vendor_registration'); 
