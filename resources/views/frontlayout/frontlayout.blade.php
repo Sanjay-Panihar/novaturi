@@ -39,6 +39,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!--<link href="https://fonts.googleapis.com/css2?family=Kosugi&display=swap" rel="stylesheet">-->
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
 </head>
 
@@ -76,6 +78,11 @@
     <!-- Main JS File -->
     <script src="{{asset('front/assets/js/main.js')}}"></script>
     <script src="{{asset('front/assets/js/demos/demo-13.js')}}"></script>
+    <script src="https://kit.fontawesome.com/850830ed04.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+
     @yield('scripts')
 </body>
 

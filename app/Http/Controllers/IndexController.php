@@ -25,7 +25,7 @@ class IndexController extends Controller
         $allevent = Event::latest()->limit(4)->get();
         $freelanceCategories = FreelanceCategory::select('id', 'category_name', 'category_image', 'cover_image')->where('category_status', 1)->get()->reverse();
         $supplierCategories = SupplierCategory::select('id', 'category_name', 'category_image', 'cover_image')->where('category_status', 1)->get()->reverse();
-        
+
         // Initialize the products query with eager loading
         $productsQuery = Product::with(['section', 'category', 'vendor']);
 
@@ -87,7 +87,6 @@ class IndexController extends Controller
             $businessCategory = explode(",", $businessCategory);
         }
 
-        // vendors
         // vendors_business_details
         $suppliersQuery = DB::table("vendors")
             ->join(
@@ -96,8 +95,12 @@ class IndexController extends Controller
                 "=",
                 "vendors_business_details.vendor_id"
             )
+            ->leftJoin('ratings', 'vendors.id', '=', 'ratings.vendor_id')
             ->select(
-                "vendors.*",
+                "vendors.id",
+                "vendors.name",
+                "vendors.email",
+                "vendors.mobile",
                 "vendors_business_details.Business_name",
                 "vendors_business_details.Brand_name",
                 "vendors_business_details.Business_Category",
@@ -107,6 +110,9 @@ class IndexController extends Controller
                 "vendors_business_details.keyservice1",
                 "vendors_business_details.keyservice2",
                 "vendors_business_details.keyservice3",
+                "vendors_business_details.city",
+                DB::raw('AVG(ratings.rating) as average_rating'),
+                DB::raw('COUNT(ratings.rating) as total_ratings')
             )
             ->where(function ($query) use ($businessCategory) {
                 // Loop through each category and add where clause
@@ -116,12 +122,27 @@ class IndexController extends Controller
                         $category
                     );
                 }
-            });
+            })
+            ->groupBy(
+                'vendors.id',
+                'vendors.name',
+                'vendors.email',
+                'vendors.mobile',
+                'vendors_business_details.Business_name',
+                'vendors_business_details.Brand_name',
+                'vendors_business_details.Business_Category',
+                'vendors_business_details.Business_catalogue',
+                'vendors_business_details.product_sample',
+                'vendors_business_details.logo',
+                'vendors_business_details.keyservice1',
+                'vendors_business_details.keyservice2',
+                'vendors_business_details.keyservice3',
+                'vendors_business_details.city'
+            );
 
         // Pagination
         $perPage = 10; // Number of items per page
         $suppliers = $suppliersQuery->paginate($perPage);
-        //dd($suppliers);
 
         return view("vendordetails")->with(compact("suppliers"));
     }
@@ -130,69 +151,69 @@ class IndexController extends Controller
     {
         // Fetch suppliers and their details
         $suppliers = DB::table("vendors")
-        ->join("vendors_business_details", "vendors.id", "=", "vendors_business_details.vendor_id")
-        ->select(
-            "vendors.*",
-            "vendors_business_details.Business_name",
-            "vendors_business_details.city",
-            "vendors_business_details.state",
-            "vendors_business_details.Country",
-            "vendors_business_details.Brand_name",
-            "vendors_business_details.websitelink",
-            "vendors_business_details.Business_Category",
-            "vendors_business_details.sell_in_wholesale",
-            "vendors_business_details.Business_catalogue",
-            "vendors_business_details.delivery_time",
-            "vendors_business_details.product_sample",
-            "vendors_business_details.facebook",
-            "vendors_business_details.instagram",
-            "vendors_business_details.twitter",
-            "vendors_business_details.linkedin",
-            "vendors_business_details.youtube",
-            "vendors_business_details.brand",
-            "vendors_business_details.service",
-            "vendors_business_details.usp_and_specialservice",
-            "vendors_business_details.Business_gst",
-            "vendors_business_details.moq_of_product",
-            "vendors_business_details.Gst_number",
-            "vendors_business_details.vendorType",
-            "vendors_business_details.keyservice1",
-            "vendors_business_details.keyservice2",
-            "vendors_business_details.keyservice3"
-        )
-        ->where("vendors.id", $request->id)
-        ->get();
+            ->join("vendors_business_details", "vendors.id", "=", "vendors_business_details.vendor_id")
+            ->select(
+                "vendors.*",
+                "vendors_business_details.Business_name",
+                "vendors_business_details.city",
+                "vendors_business_details.state",
+                "vendors_business_details.Country",
+                "vendors_business_details.Brand_name",
+                "vendors_business_details.websitelink",
+                "vendors_business_details.Business_Category",
+                "vendors_business_details.sell_in_wholesale",
+                "vendors_business_details.Business_catalogue",
+                "vendors_business_details.delivery_time",
+                "vendors_business_details.product_sample",
+                "vendors_business_details.facebook",
+                "vendors_business_details.instagram",
+                "vendors_business_details.twitter",
+                "vendors_business_details.linkedin",
+                "vendors_business_details.youtube",
+                "vendors_business_details.brand",
+                "vendors_business_details.service",
+                "vendors_business_details.usp_and_specialservice",
+                "vendors_business_details.Business_gst",
+                "vendors_business_details.moq_of_product",
+                "vendors_business_details.Gst_number",
+                "vendors_business_details.vendorType",
+                "vendors_business_details.keyservice1",
+                "vendors_business_details.keyservice2",
+                "vendors_business_details.keyservice3"
+            )
+            ->where("vendors.id", $request->id)
+            ->get();
 
-    // Check if suppliers collection is not empty
-    if ($suppliers->isNotEmpty()) {
-        // Initialize an empty array to store categories
-        $categories = [];
+        // Check if suppliers collection is not empty
+        if ($suppliers->isNotEmpty()) {
+            // Initialize an empty array to store categories
+            $categories = [];
 
-        // Loop through each supplier
-        foreach ($suppliers as $supplier) {
-            // Check vendorType for each supplier
-            if ($supplier->vendorType == "Supplier") {
-                // Fetch categories for Supplier
-                $supplierCategories = SupplierCategory::select('id', 'category_name', 'cover_image')->where('category_name',$request->category_name)->first();
-                // Merge categories
-                $categories[$supplier->id] = $supplierCategories;
-            } else {
-                // Fetch categories for Freelance
-                $freelanceCategories = FreelanceCategory::select('id', 'category_name', 'cover_image')->where('category_name',$request->category_name)->first();
-                // Merge categories
-                $categories[$supplier->id] = $freelanceCategories;
+            // Loop through each supplier
+            foreach ($suppliers as $supplier) {
+                // Check vendorType for each supplier
+                if ($supplier->vendorType == "Supplier") {
+                    // Fetch categories for Supplier
+                    $supplierCategories = SupplierCategory::select('id', 'category_name', 'cover_image')->where('category_name', $request->category_name)->first();
+                    // Merge categories
+                    $categories[$supplier->id] = $supplierCategories;
+                } else {
+                    // Fetch categories for Freelance
+                    $freelanceCategories = FreelanceCategory::select('id', 'category_name', 'cover_image')->where('category_name', $request->category_name)->first();
+                    // Merge categories
+                    $categories[$supplier->id] = $freelanceCategories;
+                }
+            }
+
+            // Attach categories to each supplier
+            foreach ($suppliers as $supplier) {
+                if (isset($categories[$supplier->id])) {
+                    $supplier->categories = $categories[$supplier->id];
+                }
             }
         }
-
-        // Attach categories to each supplier
-        foreach ($suppliers as $supplier) {
-            if (isset($categories[$supplier->id])) {
-                $supplier->categories = $categories[$supplier->id];
-            }
-        }
-    }
-    // echo '<pre>'; print_r($suppliers); die;
-    return view("supliersprofile", compact("suppliers"));
+        // echo '<pre>'; print_r($suppliers); die;
+        return view("supliersprofile", compact("suppliers"));
     }
 
     public function contact()

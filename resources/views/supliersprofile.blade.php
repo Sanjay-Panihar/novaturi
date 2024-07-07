@@ -206,18 +206,32 @@
       margin-left: 10px;
    }
 
-   .container {
-    position: relative;
-}
+   .reviews {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+   }
 
-.reviews {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-}
+   .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+   }
 
+   @keyframes spin {
+      0% {
+         transform: rotate(0deg);
+      }
 
+      100% {
+         transform: rotate(360deg);
+      }
+   }
 </style>
 <main class="main">
    @foreach($suppliers as $suplier)
@@ -227,7 +241,7 @@
         $defaultBanner = 'default-banner.jpg';
 
         $coverImage = $coverImage ?? $defaultBanner;
-     @endphp
+      @endphp
       <div class="page-header text-center">
         <img src="{{ asset('admin/' . $vendorType . '/cover_image/smallimage/' . $coverImage) }}"
           class="img-fluid rounded-start" alt="...">
@@ -533,7 +547,7 @@
         </div>
       </div>
 
-      <script src="https://kit.fontawesome.com/850830ed04.js" crossorigin="anonymous"></script>
+      <!-- <script src="https://kit.fontawesome.com/850830ed04.js" crossorigin="anonymous"></script> -->
       <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -582,7 +596,8 @@
         </div>
         <!-- End .modal-dialog -->
       </div>
-   @endforeach        
+   @endforeach
+           
 </main>
 
 
@@ -593,23 +608,39 @@
 @section('scripts')
 <script>
    document.addEventListener('DOMContentLoaded', function () {
-    const reviewContainer = document.querySelector('.review-container');
-    const errorContainer = document.querySelector('.errorcontainer');
-    const thankYouContainer = document.querySelector('.thank-you-container');
-    const stars = document.querySelectorAll('.starj1, .starj2, .starj3, .starj4, .starj5');
-    let currentReviewIndex = 0;
-    let rating = 0;
+      const reviewContainer = document.querySelector('.review-container');
+      const errorContainer = document.querySelector('.errorcontainer');
+      const thankYouContainer = document.querySelector('.thank-you-container');
+      const stars = document.querySelectorAll('.starj1, .starj2, .starj3, .starj4, .starj5');
+      let currentReviewIndex = 0;
+      let rating = 0;
 
-    function fetchReviews() {
-        fetch("{{ route('get.review') }}")
+      function showLoader() {
+         reviewContainer.innerHTML = '<div class="loader">Loading...</div>';
+      }
+
+      function hideLoader() {
+         const loader = reviewContainer.querySelector('.loader');
+         if (loader) {
+            loader.remove();
+         }
+      }
+
+      function fetchReviews() {
+         showLoader();
+         fetch("{{ route('get.review') }}")
             .then(response => response.json())
             .then(displayReviews)
-            .catch(error => console.error('Error fetching reviews:', error));
-    }
+            .catch(error => {
+               console.error('Error fetching reviews:', error);
+               reviewContainer.innerHTML = '<p>Error loading reviews. Please try again later.</p>';
+            })
+            .finally(hideLoader);
+      }
 
-    function displayReviews(response) {
-        const reviews = response.ratings;
-        const html = reviews.map((review, index) => `
+      function displayReviews(response) {
+         const reviews = response.ratings;
+         const html = reviews.map((review, index) => `
             <div class="reviewstuff" data-index="${index}" style="display: none;">
                 <p class="review">${review.review}</p>
                 <div class="bottomreview">
@@ -625,99 +656,99 @@
                 </div>
             </div>
         `).join('');
-        
-        reviewContainer.innerHTML = html;
-        showReview(0);
-    }
 
-    function showReview(index) {
-        document.querySelectorAll('.reviewstuff').forEach(el => el.style.display = 'none');
-        const activeReview = document.querySelector(`.reviewstuff[data-index="${index}"]`);
-        if (activeReview) {
+         reviewContainer.innerHTML = html;
+         showReview(0);
+      }
+
+      function showReview(index) {
+         document.querySelectorAll('.reviewstuff').forEach(el => el.style.display = 'none');
+         const activeReview = document.querySelector(`.reviewstuff[data-index="${index}"]`);
+         if (activeReview) {
             activeReview.style.display = 'block';
             activeReview.classList.add('active');
-        }
-    }
+         }
+      }
 
-    function updateStars(rating) {
-        stars.forEach((star, index) => {
+      function updateStars(rating) {
+         stars.forEach((star, index) => {
             star.classList.toggle('fas', index < rating);
             star.classList.toggle('far', index >= rating);
-        });
-    }
+         });
+      }
 
-    function showMessage(container, duration = 3000) {
-        container.style.cssText = 'visibility: visible; display: flex; opacity: 1;';
-        setTimeout(() => {
+      function showMessage(container, duration = 3000) {
+         container.style.cssText = 'visibility: visible; display: flex; opacity: 1;';
+         setTimeout(() => {
             container.style.cssText = 'visibility: hidden; display: none; opacity: 0;';
-        }, duration);
-    }
+         }, duration);
+      }
 
-    fetchReviews();
+      fetchReviews();
 
-    document.querySelector('.arrow1').addEventListener('click', () => {
-        if (currentReviewIndex > 0) {
+      document.querySelector('.arrow1').addEventListener('click', () => {
+         if (currentReviewIndex > 0) {
             showReview(--currentReviewIndex);
-        }
-    });
+         }
+      });
 
-    document.querySelector('.arrow2').addEventListener('click', () => {
-        const totalReviews = document.querySelectorAll('.reviewstuff').length;
-        if (currentReviewIndex < totalReviews - 1) {
+      document.querySelector('.arrow2').addEventListener('click', () => {
+         const totalReviews = document.querySelectorAll('.reviewstuff').length;
+         if (currentReviewIndex < totalReviews - 1) {
             showReview(++currentReviewIndex);
-        }
-    });
+         }
+      });
 
-    stars.forEach((star, index) => {
-        star.addEventListener('click', () => {
+      stars.forEach((star, index) => {
+         star.addEventListener('click', () => {
             rating = index + 1;
             updateStars(rating);
-        });
-    });
+         });
+      });
 
-    document.querySelector('.submit').addEventListener('click', function() {
-        const firstName = document.querySelector('.firstname').value;
-        const lastName = document.querySelector('.lastname').value;
-        const review = document.querySelector('.reviewinp').value;
+      document.querySelector('.submit').addEventListener('click', function () {
+         const firstName = document.querySelector('.firstname').value;
+         const lastName = document.querySelector('.lastname').value;
+         const review = document.querySelector('.reviewinp').value;
 
-        if (!firstName || !lastName || !review || rating === 0) {
+         if (!firstName || !lastName || !review || rating === 0) {
             showMessage(errorContainer);
             return;
-        }
+         }
 
-        fetch('{{ route("submit.review") }}', {
+         fetch('{{ route("submit.review") }}', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+               'Content-Type': 'application/json',
+               'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                review: review,
-                rating: rating,
-                vendor_id: {{ $suplier->id }}
+               first_name: firstName,
+               last_name: lastName,
+               review: review,
+               rating: rating,
+               vendor_id: {{ $suplier->id }}
             })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.querySelector('.firstname').value = '';
-                document.querySelector('.lastname').value = '';
-                document.querySelector('.reviewinp').value = '';
-                rating = 0;
-                updateStars(rating);
-                showMessage(thankYouContainer);
-                fetchReviews();
-            } else {
-                throw new Error(data.message || 'An error occurred. Please try again.');
-            }
-        })
-        .catch(error => {
-            document.querySelector('.error').textContent = error.message;
-            showMessage(errorContainer);
-        });
-    });
-});
+         })
+            .then(response => response.json())
+            .then(data => {
+               if (data.success) {
+                  document.querySelector('.firstname').value = '';
+                  document.querySelector('.lastname').value = '';
+                  document.querySelector('.reviewinp').value = '';
+                  rating = 0;
+                  updateStars(rating);
+                  showMessage(thankYouContainer);
+                  fetchReviews();
+               } else {
+                  throw new Error(data.message || 'An error occurred. Please try again.');
+               }
+            })
+            .catch(error => {
+               document.querySelector('.error').textContent = error.message;
+               showMessage(errorContainer);
+            });
+      });
+   });
 </script>
 @endsection
