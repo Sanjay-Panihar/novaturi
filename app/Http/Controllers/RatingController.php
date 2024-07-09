@@ -9,7 +9,7 @@ class RatingController extends Controller
 {
     public function getReview()
     {
-        $ratings = Rating::orderBy('rating', 'desc')->take(5)->get();
+        $ratings = Rating::orderBy('created_at', 'desc')->take(5)->get();
 
         return response()->json(['status' => true, 'ratings' => $ratings], 200);
     }

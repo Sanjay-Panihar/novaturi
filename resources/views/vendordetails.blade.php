@@ -119,7 +119,6 @@
                      </div>
                   </div>
                   <div class="col-md-8">
-                     <div class="card-body">
                         <h5 class="card-title">{{ $supplier->Business_name }}
                            <img src="{{ asset('img/banner/verified.jpg') }}" class="img-fluid" alt="Verified" style="height: 30px; margin-left: 10px;">
                         </h5>
@@ -160,7 +159,6 @@
                            <a href="tel:{{ $supplier->mobile }}" class="btn btn-primary btn-rounded waves-effect waves-light" style="color: white;">Call Now</a>
                            <a href="mailto:{{ $supplier->email }}" class="btn btn-primary btn-rounded waves-effect waves-light" style="color: white;">Send Enquiry</a>
                         </div>
-                     </div>
                   </div>
                </div>
             </div>

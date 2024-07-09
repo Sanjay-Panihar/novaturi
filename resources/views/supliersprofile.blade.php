@@ -547,7 +547,7 @@
         </div>
       </div>
 
-      <!-- <script src="https://kit.fontawesome.com/850830ed04.js" crossorigin="anonymous"></script> -->
+      <script src="https://kit.fontawesome.com/850830ed04.js" crossorigin="anonymous"></script>
       <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -700,6 +700,9 @@
       });
 
       stars.forEach((star, index) => {
+         star.addEventListener('mouseover', () => {
+            updateStars(index + 1);
+         })
          star.addEventListener('click', () => {
             rating = index + 1;
             updateStars(rating);
